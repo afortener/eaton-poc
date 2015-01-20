@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-twitter="http://www.springframework.org/schema/integration/twitter"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration
+		http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/integration/twitter
+		http://www.springframework.org/schema/integration/twitter/spring-integration-twitter-4.1.xsd">
+    	
+<!-- 
+
+This is the standard Spring XD application context
+for a Twitter custom sink.  
+
+When using the outbound adapter as a custom sink in Spring XD, 
+you need to specify the Twitter Template's placeholders as arguments, like this:
+ 		
+stream create --name twitter-sink --definition "http | twitter-update --consumerKey=xxx \
+--consumerSecret=xxx --accessToken=xxx --accessTokenSecret=xxx" --deploy
+
+-->
+ 	<!-- The standard input channel for Spring XD -->
+ 	<int:channel id="input"/>
+ 	
+ 	<!-- 
+ 		The Twitter template to use for connections.  Placeholders are either injected
+ 		automatically by Spring XD, or specified as system properties in a test context.
+ 	 -->
+	<bean id="twitterTemplate" class="org.springframework.social.twitter.api.impl.TwitterTemplate">
+		<constructor-arg value="${consumerKey}"/>
+		<constructor-arg value="${consumerSecret}"/>
+		<constructor-arg value="${accessToken}"/>
+		<constructor-arg value="${accessTokenSecret}"/>
+	</bean> 
+
+	<!-- Outbound channel adapter for Twitter.  Uses Spring XD's standard channel named 'input'. -->
+	<int-twitter:outbound-channel-adapter twitter-template="twitterTemplate" channel="input"/>
+
+</beans>

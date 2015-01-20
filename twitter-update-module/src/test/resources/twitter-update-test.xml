@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/integration
+		http://www.springframework.org/schema/integration/spring-integration.xsd">
+    	
+<!-- 
+
+This is a test application context for the
+Twitter outbound channel adapter.
+
+-->
+	<!-- 
+		Mimic Spring XD's automatic property placeholder.
+		Set Twitter credentials as system properties to have them
+		passed to the Twitter template:
+
+		-DconsumerKey=Ctg4SuUjDIKlCOIaXkJ8EVWeR
+		-DconsumerSecret=sbx4Xj3oo2gt2xH9cAxJb672HQOCFZirBY90K6ymqtTMW6bb1f
+		-DaccessToken=2890325044-7PH7oaJr996OwAfD4xZIN047ivukTSJl4KrmA4y
+		-DaccessTokenSecret=Op4iNxoezVjHyZVq8uS67FAll8yE0DyFjuXXSamYuc8aa
+
+	-->
+ 	<context:property-placeholder />
+ 	
+ 	<!-- 
+ 		Polling inbound adapter for testing.  This should send a tweet
+ 		every five seconds with the expression 'Test tweet [nnn]'.  This
+ 		tests the outbound twitter adapter, since the outbound adapter is
+ 		listening on the channel named 'input' (standard for Spring XD 
+ 		modules), and has a reference to the twitter template.  We simply
+ 		need to put a message on the channel named 'input' to test the
+ 		outbound adapter.
+ 	-->
+ 	<int:inbound-channel-adapter channel="input" expression="'Test tweet [' + #{T(java.lang.Math).random() * 1000} + ']'">
+ 		<int:poller fixed-rate="5000"/>
+ 	</int:inbound-channel-adapter>
+ 	
+</beans>
