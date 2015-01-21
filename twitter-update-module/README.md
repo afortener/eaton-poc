@@ -1,4 +1,4 @@
-#Twitter Channel Adapter
+#Twitter Update Module
 
 ##Introduction
 This project is for a custom Spring XD sink to send Tweets to Twitter.  This module will normally be created as a tap in a stream to send Tweets based on some sort of condition.
@@ -6,15 +6,9 @@ This project is for a custom Spring XD sink to send Tweets to Twitter.  This mod
 ##Installation
 
 1. Clone this project.
-2. Change directories to the root of the project, and run the command `gradle build`.
-3. Copy the `src/main/resources/twitter-update.xml` file to the `<spring-xd>/xd/modules/sink` directory.
-4. Download the following JAR files and put them in the `<spring-xd>/xd/lib` directory:
-    * [Spring Integration Twitter](http://central.maven.org/maven2/org/springframework/integration/spring-integration-twitter/4.1.2.RELEASE/spring-integration-twitter-4.1.2.RELEASE.jar)
-    * [Spring Social Config](http://central.maven.org/maven2/org/springframework/social/spring-social-config/1.1.0.RELEASE/spring-social-config-1.1.0.RELEASE.jar)
-    * [Spring Social Core](http://central.maven.org/maven2/org/springframework/social/spring-social-core/1.1.0.RELEASE/spring-social-core-1.1.0.RELEASE.jar)
-    * [Spring Social Twitter](http://central.maven.org/maven2/org/springframework/social/spring-social-twitter/1.1.0.RELEASE/spring-social-twitter-1.1.0.RELEASE.jar)
-    * [Spring Social Web](http://central.maven.org/maven2/org/springframework/social/spring-social-web/1.1.0.RELEASE/spring-social-web-1.1.0.RELEASE.jar)
-5. Start the Spring XD single node server.
+2. Change directories to the root of the project, and run the command `mvn clean package`.  This will create a jar file that matches the module layout in Spring XD.
+3. Start the Spring XD single node server.
+4. Start the Spring XD shell and upload the module with the command `module upload --file <path-to-jar> --name twitter-update --type sink`.
 
 ##Application Registration
 
@@ -31,6 +25,6 @@ You need to register your application for access to your Twitter feed.  To regis
 
 To create a tap with this sink, specify it as the sink for your tap like this:
 
-`stream create --name eatontap --definition "tap:stream:eaton.csvtransformer > twitter-update --consumerKey=xxx --consumerSecret=xxx --accessToken=xxx --accessTokenSecret=xxx" --deploy`
+`stream create --name eatontap --definition "tap:stream:eaton.csv-transformer > twitter-update --consumerKey=xxx --consumerSecret=xxx --accessToken=xxx --accessTokenSecret=xxx" --deploy`
 
 Once the tap is invoked, you should see a new update posted in your timeline.

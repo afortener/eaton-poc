@@ -18,8 +18,10 @@ for a Twitter custom sink.
 When using the outbound adapter as a custom sink in Spring XD, 
 you need to specify the Twitter Template's placeholders as arguments, like this:
  		
-stream create --name twitter-sink --definition "http | twitter-update --consumerKey=xxx \
---consumerSecret=xxx --accessToken=xxx --accessTokenSecret=xxx" --deploy
+stream create &#x002D;&#x002D;name twitter-sink definition \
+"http | twitter-update &#x002D;&#x002D;consumerKey=xxx \
+&#x002D;&#x002D;consumerSecret=xxx &#x002D;&#x002D;accessToken=xxx \
+&#x002D;&#x002D;accessTokenSecret=xxx" &#x002D;&#x002D;deploy
 
 -->
  	<!-- The standard input channel for Spring XD -->

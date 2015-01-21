@@ -24,7 +24,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:twitter-update.xml", "classpath:twitter-update-test.xml"})
+@ContextConfiguration(locations = {"classpath:/config/twitter-update.xml", "classpath:twitter-update-test.xml"})
 public class TwitterOutboundAdapterTest {
 
 	@Autowired

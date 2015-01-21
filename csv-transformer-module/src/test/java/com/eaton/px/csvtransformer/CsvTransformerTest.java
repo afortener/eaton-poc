@@ -1,18 +1,23 @@
 package com.eaton.px.csvtransformer;
 
-
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.eaton.px.CsvTransformer;
 
 /**
- * Test suite for the CsvTransformer class.
+ * Test suite for the CSV transformer.
  * @author Brian Jimerson
  *
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:/config/csv-transformer.xml", "classpath:csv-transformer-test.xml"})
 public class CsvTransformerTest {
 
+	
 	/**
 	 * Test for the transform method.
 	 */
