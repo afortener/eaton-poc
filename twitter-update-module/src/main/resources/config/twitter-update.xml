@@ -40,6 +40,6 @@ stream create &#x002D;&#x002D;name twitter-sink definition \
 
 	<!-- Outbound channel adapter for Twitter.  Uses Spring XD's standard channel named 'input'. -->
 	<int-twitter:outbound-channel-adapter twitter-template="twitterTemplate" channel="input" 
-		tweet-data-expression="payload.length() gt 140 ? payload.substring(0, 139) : payload"/>
+		tweet-data-expression="payload.length() gt 140 ? payload.substring(0, 140) : payload"/>
 
 </beans>
