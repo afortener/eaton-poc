@@ -31,8 +31,6 @@ public class CsvTransformerTest {
 		String json = transformer.transform(csv);
 		Assert.assertNotNull("JSON shouldn't be null.", json);
 		Assert.assertTrue("JSON should contain site field.", json.indexOf("site") > -1);
-		Assert.assertTrue("Shouldn't be any '[' characters in the JSON", json.indexOf("[") == -1);
-		Assert.assertTrue("Shouldn't be any ']' characters in the JSON", json.indexOf("]") == -1);
 	}
 
 }
