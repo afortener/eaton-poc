@@ -21,12 +21,6 @@ public class CsvTransformer {
 		
 		JSONArray payloadAsJson = CDL.toJSONArray(payload);
 		return payloadAsJson.toString();
-/*		if (payloadAsJson.length() > 0) {
-			return payloadAsJson.get(0).toString();
-		} else {
-			return "";
-		}
-*/
 		
 	}
 	
