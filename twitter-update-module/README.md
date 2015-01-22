@@ -25,6 +25,6 @@ You need to register your application for access to your Twitter feed.  To regis
 
 To create a tap with this sink, specify it as the sink for your tap like this:
 
-`stream create --name eatontap --definition "tap:stream:eaton.csv-transformer > twitter-update --consumerKey=xxx --consumerSecret=xxx --accessToken=xxx --accessTokenSecret=xxx" --deploy`
+`stream create --name eatontap --definition "tap:stream:eaton.transform > twitter-update --consumerKey=xxx --consumerSecret=xxx --accessToken=xxx --accessTokenSecret=xxx" --deploy`
 
 Once the tap is invoked, you should see a new update posted in your timeline.

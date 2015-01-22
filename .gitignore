@@ -10,3 +10,5 @@ out/
 *.iml
 *.swp
 .gradle
+lib/
+target/
