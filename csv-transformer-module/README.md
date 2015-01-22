@@ -1,7 +1,7 @@
 #CSV Transformer Module
 
 ##Introduction
-This project is for a custom Spring XD transformer to transform an CSV payload into a JSON string payload.  The JSON string payload can then be used by the Spring XD JDBC sink to insert into a database.
+This project is for a custom Spring XD transformer to transform an CSV payload into a JSON string payload.  The JSON string payload is a JSON array, and needs to split into individual JSON objects that can then be used by the Spring XD JDBC sink to insert into a database.  For methods on splitting the JSON array, see the [parent README](../).
 
 ##Installation
 
