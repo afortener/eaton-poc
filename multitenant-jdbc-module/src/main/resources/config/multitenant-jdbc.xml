@@ -14,9 +14,6 @@ for a customized sink of the standard JDBC sink..
 
 -->
 
-	<!-- Standard Spring XD channel for sinks. -->
-	<int:channel id="input"/>
-
 	<!-- The data source for this sink.  Property placeholders are set by Spring XD -->
 	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
 		<property name="driverClassName" value="${driverClassName}"/>
@@ -59,7 +56,10 @@ for a customized sink of the standard JDBC sink..
 		<property name="columnNames" value="${columns}"/>
 		<property name="multitenantField" value="${multitenantField}"/>
 	</bean>
-	
+
+	<!-- Standard Spring XD channel for sinks. -->
+	<int:channel id="input"/>
+
 	<!-- The outbound channel adapter for this sink.  This triggers the JDBC insert. -->
 	<int:outbound-channel-adapter channel="input" 
 		ref="multitenantJdbcDao" method="insertRecord"/>

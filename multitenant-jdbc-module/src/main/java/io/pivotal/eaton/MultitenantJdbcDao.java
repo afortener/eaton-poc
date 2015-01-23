@@ -2,6 +2,7 @@ package io.pivotal.eaton;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.util.StringUtils;
 
 /**
@@ -25,7 +26,7 @@ import org.springframework.util.StringUtils;
  */
 public class MultitenantJdbcDao {
 
-	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate jdbcTemplate;
 	private String baseTableName;
 	private String multitenantField;
 	private List<String> columnNames;
@@ -39,7 +40,7 @@ public class MultitenantJdbcDao {
 	 */
 	public void setDataSource(DataSource dataSource) {
 		log.debug("Creating JDBC template with data source [" + dataSource + "].");
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
+		this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 	}
 	
 	/**
@@ -49,9 +50,10 @@ public class MultitenantJdbcDao {
 	 * insert.
 	 */
 	public void insertRecord(String payload) {
-		String sql = this.createSqlInsertStatement(payload);
+		Map<String, Object> parsedPayload = this.parsePayload(payload);
+		String sql = this.createSqlInsertStatement(parsedPayload);
 		log.info("Executing SQL statement [" + sql + "]");
-		this.jdbcTemplate.update(sql);
+		this.jdbcTemplate.update(sql, this.getParameterValues(parsedPayload));
 	}
 	
 	/**
@@ -61,42 +63,48 @@ public class MultitenantJdbcDao {
 	 * @param json The JSON String of data values.
 	 * @return A SQL insert statement created from the JSON.
 	 */
-	private String createSqlInsertStatement(String json) {
+	private String createSqlInsertStatement(Map<String, Object> data) {
 		StringBuilder sql = new StringBuilder();
-		Map<String, Object> parsedPayload = this.parsePayload(json);
 		sql.append("insert into ");
 		sql.append(baseTableName);
-		sql.append(parsedPayload.get(multitenantField));
+		sql.append(data.get(multitenantField));
 		sql.append(" (");
 		sql.append(this.getColumnsAsSql());
 		sql.append(") values(");
-		sql.append(this.getValuesAsSql(parsedPayload));
+		sql.append(this.getNamedParameters());
 		sql.append(");");
 		return sql.toString();
 	}
 	
 	/**
-	 * Creates a SQL snippet for the values passed in the map.
-	 * 
-	 * @param values A map of values to use for the SQL.
-	 * @return A SQL snippet for the values passed.
+	 * Gets a list of the named parameters for the insert,
+	 * in the format ':column_name'
+	 * @return A list of named parameters
 	 */
-	private String getValuesAsSql(Map<String, Object> values) {
+	private String getNamedParameters() {
 		StringBuilder sb = new StringBuilder();
-		for (String column : this.columnNames) {
+		for (String column : this.getColumnNames()) {
 			if (sb.length() > 0) {
 				sb.append(", ");
 			}
-			Object value = values.get(column);
-			if (value instanceof String) {
-				sb.append("'");
-			}
-			sb.append(value);
-			if (value instanceof String) {
-				sb.append("'");
-			}
+			sb.append(":");
+			sb.append(column);
 		}
 		return sb.toString();
+	}
+	
+	/**
+	 * Creates a map of named parameter values
+	 * 
+	 * @param values A map of values to use for the named parameters.
+	 * @return A map of named parameter values.
+	 */
+	private Map<String, Object> getParameterValues(Map<String, Object> values) {
+		Map<String, Object> parameterValues = new HashMap<String, Object>();
+		for (String column : this.columnNames) {
+			parameterValues.put(column, values.get(column));
+		}
+		return parameterValues;
 	}
 	
 	/**
