@@ -18,7 +18,7 @@
 	
 	<!-- The custom transformer definition for the module -->
 	<int:transformer input-channel="input" output-channel="output">
-		<bean class="com.eaton.px.CsvTransformer"/>
+		<bean class="io.pivotal.eaton.csvtransformer.CsvTransformer"/>
 	</int:transformer>
 
 </beans>

@@ -1,4 +1,4 @@
-package com.eaton.px;
+package io.pivotal.eaton.csvtransformer;
 
 import org.json.CDL;
 import org.json.JSONArray;
