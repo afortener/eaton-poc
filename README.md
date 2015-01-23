@@ -22,7 +22,7 @@ The rest of this document describes how to get the base Spring XD / GemFire XD e
 
     `create table app.eaton1 ("id" int generated always as identity, "site" integer, "publisher" varchar(100), "time" integer, "min_value" double, "max_value" double, "avg_value" double, "actual_value" double);`
 
-    `create table app.eaton1 ("id" int generated always as identity, "site" integer, "publisher" varchar(100), "time" integer, "min_value" double, "max_value" double, "avg_value" double, "actual_value" double);`
+    `create table app.eaton2 ("id" int generated always as identity, "site" integer, "publisher" varchar(100), "time" integer, "min_value" double, "max_value" double, "avg_value" double, "actual_value" double);`
     
 2. Copy the `gemfirexd-client.jar` file from the `<gemfirexd>/lib` directory to the `<spring-xd>/xd/lib` directory.
 
