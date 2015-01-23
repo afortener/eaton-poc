@@ -16,11 +16,11 @@ This is the standard Spring XD application context
 for a customized sink of the standard JDBC sink..  
 
 -->
+
+	<!-- Standard Spring XD channel for sinks. -->
 	<int:channel id="input"/>
-	<int:channel id="values"/>
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource"/>
-	</bean>
+
+	<!-- The data source for this sink.  Property placeholders are set by Spring XD -->
 	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
 		<property name="driverClassName" value="${driverClassName}"/>
 		<property name="url" value="${url}"/>
@@ -34,7 +34,6 @@ for a customized sink of the standard JDBC sink..
 		<property name="testOnBorrow" value="${testOnBorrow}"/>
 		<property name="testOnReturn" value="${testOnReturn}"/>
 		<property name="testWhileIdle" value="${testWhileIdle}"/>
-		<property name="validationQuery" value="${validationQuery}"/>
 		<property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}"/>
 		<property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}"/>
 		<property name="removeAbandoned" value="${removeAbandoned}"/>
@@ -48,39 +47,24 @@ for a customized sink of the standard JDBC sink..
 		<property name="useEquals" value="${useEquals}"/>
 		<property name="suspectTimeout" value="${suspectTimeout}"/>
 		<property name="alternateUsernameAllowed" value="${alternateUsernameAllowed}"/>
-		<property name="validatorClassName" value="${validatorClassName}"/>
-		<property name="connectionProperties" value="${connectionProperties}"/>
-		<property name="initSQL" value="${initSQL}"/>
-		<property name="jdbcInterceptors" value="${jdbcInterceptors}"/>
 	</bean>
 	
-	<int:transformer input-channel="input" ref="transformer"
-		output-channel="values" />
-
-	<int-jdbc:outbound-channel-adapter
-		query="insert into ${tableName} (#{transformer.columns}) values(#{transformer.values})"
-		data-source="dataSource" channel="values" />
-
-	<bean id="transformer"
-		class="org.springframework.xd.jdbc.JdbcMessagePayloadTransformer">
-		<property name="columnNames" value="${columns}" />
-	</bean>
-
-	<bean id="dataSourceInitializer"
-		class="org.springframework.jdbc.datasource.init.DataSourceInitializer">
-		<property name="databasePopulator" ref="databasePopulator" />
-		<property name="dataSource" ref="dataSource" />
-		<property name="enabled" value="${initializeDatabase}" />
-	</bean>
-
-	<bean id="databasePopulator"
-		class="org.springframework.xd.jdbc.SingleTableDatabaseInitializer">
-		<property name="scripts"
-			value="${xd.config.home}/${initializerScript}" />
-		<property name="ignoreFailedDrops" value="true" />
-		<property name="tableName" value="${tableName}" />
-		<property name="columnNames" value="${columns}" />
+	<!-- The transaction manager for this sink. -->
+	<bean id="transactionManager" 
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
 	</bean>
 	
+	<!-- The DAO for executing the SQL inserts for this sink. -->
+	<bean id="multitenantJdbcDao" class="io.pivotal.eaton.MultitenantJdbcDao">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="baseTableName" value="${tableName}"/>
+		<property name="columnNames" value="${columns}"/>
+		<property name="multitenantField" value="${multitenantField}"/>
+	</bean>
+	
+	<!-- The outbound channel adapter for this sink.  This triggers the JDBC insert. -->
+	<int:outbound-channel-adapter channel="input" 
+		ref="multitenantJdbcDao" method="insertRecord"/>
 	
 </beans>
