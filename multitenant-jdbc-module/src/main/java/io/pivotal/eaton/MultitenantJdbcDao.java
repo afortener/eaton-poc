@@ -57,11 +57,10 @@ public class MultitenantJdbcDao {
 	}
 	
 	/**
-	 * Creates a SQL insert statement from a JSON 
-	 * string of values.
+	 * Creates a SQL insert statement from a map of values
 	 * 
-	 * @param json The JSON String of data values.
-	 * @return A SQL insert statement created from the JSON.
+	 * @param data A map of the data to create SQL from.
+	 * @return A SQL insert statement created from the data.
 	 */
 	private String createSqlInsertStatement(Map<String, Object> data) {
 		StringBuilder sql = new StringBuilder();
