@@ -2,6 +2,7 @@
 .project
 .settings
 .springBeans
+.DS_Store
 bin/
 build/
 log/
