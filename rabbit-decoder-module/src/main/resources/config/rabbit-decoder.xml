@@ -2,19 +2,56 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/integration 
-		http://www.springframework.org/schema/integration/spring-integration.xsd">
+		http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/integration/amqp 
+		http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd">
 
 <!-- 
 	This is the standard Spring XD application
 	context for the Rabbit decoder module.  
  -->
  
-	<!-- The default input and output channels for the source module -->
-	<int:channel id="input"/>
+ 	<!-- The connection factory for RMQ -->
+ 	<bean id="connectionFactory" 
+ 		class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
+ 		<constructor-arg value="${hostname}"/>
+ 		<constructor-arg value="${port}"/>
+ 		<property name="username" value="${username}"/>
+ 		<property name="password" value="${password}"/>
+ 		<property name="virtualHost" value="${virtualHost}"/>
+ 	</bean>
+ 	
+ 	<!-- The message converter to convert the time stream data -->
+ 	<bean id="timeStreamMessageConverter" 
+ 		class="io.pivotal.eaton.TimeStreamMessageConverter"/>
+ 		
+	<!-- The default output channel for the source module -->
 	<int:channel id="output"/>
 	
-
+	<!-- Other channels for the flow -->
+	<int:channel id="convertedMessage"/>
+	<int:channel id="amplifiedMessage"/>
+	
+	<!-- The inbound channel adapter that listens for messages -->
+	<int-amqp:inbound-channel-adapter
+		channel="output"
+		connection-factory="connectionFactory"
+		message-converter="timeStreamMessageConverter"
+		queue-names="${queue}"/>
+		
+	<!-- Transformer bean to multiply (amplify) results -->
+	<bean id="resultsMultiplier" 
+		class="io.pivotal.eaton.MultiplyResultsTransformer">
+		<property name="amplifyFactor" value="${amplifyFactor}"/>
+	</bean>
+	<!-- TODO: invoke amplifier if true, put amplified message on output channel
+		amplified message channel may be unnecessary
+		
+		define timeStreamMessageConverter and amplifier beans (amplifier is probably an enricher
+		 -->
+	
 </beans>

@@ -11,4 +11,27 @@
 	Test application context for the Rabbit decoder module.  
  -->
  
+ <!-- Connection Factory -->
+<bean id="rabbitConnFactory" 
+ 		class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
+ 		<constructor-arg value="localhost"/>
+ 		<constructor-arg value="5672"/>
+ 		<property name="username" value="guest"/>
+ 		<property name="password" value="guest"/>
+ 		<property name="virtualHost" value="/"/>
+ 	</bean>
+ 
+<!-- Spring AMQP Template -->
+<bean id="amqpTemplate" 
+	class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+	<property name="connectionFactory" ref="rabbitConnFactory" />
+	<property name="routingKey" value="eaton"/>
+	<property name="queue" value="eaton"/>
+</bean>
+ 
+<!-- Spring AMQP Admin -->
+<bean id="amqpAdmin" class="org.springframework.amqp.rabbit.core.RabbitAdmin">
+	<constructor-arg ref="rabbitConnFactory" />
+</bean>
+ 
 </beans>
