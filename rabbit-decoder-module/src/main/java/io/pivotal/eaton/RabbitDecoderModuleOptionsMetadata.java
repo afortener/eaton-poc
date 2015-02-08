@@ -18,7 +18,7 @@ public class RabbitDecoderModuleOptionsMetadata {
 	private String password;
 	private String virtualHost;
 	private String queue;
-	private boolean amplifyTrends;
+	private Boolean amplifyTrends;
 	private String amplifyFactor;
 	
 	/**
@@ -46,7 +46,7 @@ public class RabbitDecoderModuleOptionsMetadata {
 	/**
 	 * @param hostname the hostname to set
 	 */
-	@ModuleOption("The hostname of the Rabbit MQ server.")
+	@ModuleOption(value="The hostname of the Rabbit MQ server.", defaultValue="localhost")
 	public void setHostname(String hostname) {
 		this.hostname = hostname;
 	}
@@ -61,7 +61,7 @@ public class RabbitDecoderModuleOptionsMetadata {
 	/**
 	 * @param port the port to set
 	 */
-	@ModuleOption("The port of the Rabbit MQ server.")
+	@ModuleOption(value="The port of the Rabbit MQ server.", defaultValue="5672")
 	public void setPort(String port) {
 		this.port = port;
 	}
@@ -76,7 +76,7 @@ public class RabbitDecoderModuleOptionsMetadata {
 	/**
 	 * @param username the username to set
 	 */
-	@ModuleOption("The username to connect with.")
+	@ModuleOption(value="The username to connect with.", defaultValue="guest")
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -91,7 +91,7 @@ public class RabbitDecoderModuleOptionsMetadata {
 	/**
 	 * @param password the password to set
 	 */
-	@ModuleOption("The password to connect with.")
+	@ModuleOption(value="The password to connect with.", defaultValue="guest")
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -106,7 +106,7 @@ public class RabbitDecoderModuleOptionsMetadata {
 	/**
 	 * @param vHost the vHost to set
 	 */
-	@ModuleOption("The virtual host to connect to.")
+	@ModuleOption(value="The virtual host to connect to.", defaultValue="/")
 	public void setVirtualHost(String virtualHost) {
 		this.virtualHost = virtualHost;
 	}
@@ -121,7 +121,7 @@ public class RabbitDecoderModuleOptionsMetadata {
 	/**
 	 * @param queue the queue to set
 	 */
-	@ModuleOption("The queue to listen on.")
+	@ModuleOption(value="The queue to listen on.", defaultValue="")
 	public void setQueue(String queue) {
 		this.queue = queue;
 	}
@@ -129,15 +129,15 @@ public class RabbitDecoderModuleOptionsMetadata {
 	/**
 	 * @return the amplifyTrends
 	 */
-	public boolean getAmplifyTrends() {
+	public Boolean getAmplifyTrends() {
 		return amplifyTrends;
 	}
 	
 	/**
 	 * @param amplifyTrends the amplifyTrends to set
 	 */
-	@ModuleOption("Whether or not trend data should be amplified.")
-	public void setAmplifyTrends(boolean amplifyTrends) {
+	@ModuleOption(value="Whether or not trend data should be amplified.", defaultValue="false")
+	public void setAmplifyTrends(Boolean amplifyTrends) {
 		this.amplifyTrends = amplifyTrends;
 	}
 	
@@ -151,7 +151,7 @@ public class RabbitDecoderModuleOptionsMetadata {
 	/**
 	 * @param amplifyFactor the amplifyFactor to set
 	 */
-	@ModuleOption("The factor that trends should be amplified by, if amplifyTrends is true.")
+	@ModuleOption(value="The factor that trends should be amplified by, if amplifyTrends is true.", defaultValue="1")
 	public void setAmplifyFactor(String amplifyFactor) {
 		this.amplifyFactor = amplifyFactor;
 	}
